@@ -32,7 +32,7 @@ public class Application {
 
     @GetMapping({"/"})
     public String home() {
-        return "It works!";
+        return "It works!!";
     }
 
     @GetMapping({"/status"})
