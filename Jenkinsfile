@@ -56,7 +56,7 @@ pipeline {
 
                     sshagent(['ec2-instance-aws-java-maven-app']) {
                         sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null server-cmds.sh ec2-user@18.197.254.226:/home/ec2-user"
-                        sh "scp docker-compose.yaml ec2-user@18.197.254.226:/home/ec2-user"
+                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yaml ec2-user@18.197.254.226:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@18.197.254.226 ${shellCmd}"
                     }
                 }
