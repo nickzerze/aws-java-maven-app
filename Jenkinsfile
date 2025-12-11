@@ -44,7 +44,6 @@ pipeline {
                     def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME}"
 
                     sshagent(['ec2-instance-aws-java-maven-app']) {
-                        sh 'docker compose -f docker-compose.yaml down'
                         sh "scp server-cmds.sh ec2-user@63.180.240.90:/home/ec2-user"
                         sh "scp docker-compose.yaml ec2-user@63.180.240.90:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@63.180.240.90 ${shellCmd}"
