@@ -1,20 +1,37 @@
 #!/usr/bin.env groovy
 
+library identifier: 'jenkins-shared-library@main', retriever: modernSCM(
+    [$class: 'GitSCMSource',
+    remote: 'https://github.com/nickzerze/jenkins-shared-library.git',
+    credentialsId: 'github-credentials'
+    ]
+)
+def gv
+
 pipeline {   
     agent any
+    tools {
+        maven 'maven-3.9'
+    }
+    environment {
+        IMAGE_NAME = 'malware4/java-maven-app:aws-1.0'
+    }
     stages {
-        stage("test") {
+        stage("build app") {
             steps {
                 script {
-                    echo "Testing the application....."
-
+                    echo "Building the application jar..."
+                    buildJar()
                 }
             }
         }
-        stage("build") {
+        stage("build image") {
             steps {
                 script {
-                    echo "Building the application......"
+                    echo "Building the docker image..."
+                    buildImage(env.IMAGE_NAME)
+                    dockerLogin()
+                    dockerPush(env.IMAGE_NAME)
                 }
             }
         }
@@ -22,7 +39,8 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    def dockerCmd = 'docker run -p 8080:8080 -d malware4/java-maven-app:1.1.11-27'
+                    echo 'Deploying docker image to EC2 instance...'
+                    def dockerCmd = "docker run -p 8080:8080 -d ${IMAGE_NAME}"
                     sshagent(['ec2-instance-aws-java-maven-app']) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@63.180.240.90 ${dockerCmd}"
                     }
