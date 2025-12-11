@@ -13,7 +13,7 @@ pipeline {
         maven 'maven-3.9'
     }
     environment {
-        IMAGE_NAME = 'malware4/java-maven-app:aws-1.0'
+        IMAGE_NAME = 'malware4/java-maven-app:aws-2.0'
     }
     stages {
         stage("build app") {
@@ -40,7 +40,9 @@ pipeline {
                 script {
                     echo 'Deploying docker image to EC2 instance...'
                     //def dockerComposeCmd = "docker compose -f docker-compose.yaml up --detach"
-                    def shellCmd = "bash ./server-cmds.sh"
+
+                    def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
+
                     sshagent(['ec2-instance-aws-java-maven-app']) {
                         sh 'docker compose -f docker-compose.yaml down'
                         sh "scp server-cmds.sh ec2-user@63.180.240.90:/home/ec2-user"
