@@ -30,7 +30,7 @@ pipeline {
         stage("build app") {
             steps {
                 script {
-                    echo "Building the application jar...."
+                    echo "Building the application jar..."
                     buildJar()
                 }
             }
