@@ -12,10 +12,21 @@ pipeline {
     tools {
         maven 'maven-3.9'
     }
-    environment {
-        IMAGE_NAME = 'malware4/java-maven-app:aws-2.0'
-    }
     stages {
+        stage("Increment Version") {
+             steps {
+                script {
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version ($BUILD_NUMBER)"
+                }
+            }           
+        }
+
         stage("build app") {
             steps {
                 script {
@@ -44,12 +55,35 @@ pipeline {
                     def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME}"
 
                     sshagent(['ec2-instance-aws-java-maven-app']) {
-                        sh "scp server-cmds.sh ec2-user@63.180.240.90:/home/ec2-user"
-                        sh "scp docker-compose.yaml ec2-user@63.180.240.90:/home/ec2-user"
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@63.180.240.90 ${shellCmd}"
+                        sh "scp server-cmds.sh ec2-user@18.197.254.226:/home/ec2-user"
+                        sh "scp docker-compose.yaml ec2-user@18.197.254.226:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@18.197.254.226 ${shellCmd}"
                     }
                 }
             }
-        }               
+        } 
+
+        stage('commit version update') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'github-groovy', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USER')]) {
+                        // git config here for the first time run
+                        //SOS δες ότι για credentials χρησιμοποιώ το github-groovy το οποίο στο password ΔΕΝ έχει το πραγματικό password
+                        //αλλά το token που έχω φτιάξει.
+                        sh 'git config --global user.email "jenkins@example.com"'
+                        sh 'git config --global user.name "jenkins"'
+						sh 'git status'
+						sh 'git branch'
+						sh 'git config --list'
+						
+                        sh "git remote set-url origin https://${GIT_USER}:${GIT_PASS}@github.com/nickzerze/java-maven-app.git"
+
+                        sh 'git add .'
+                        sh 'git commit -m "ci: version bump"'
+                        sh 'git push origin HEAD:jenkins-jobs'
+                    }
+                }
+            }
+        }              
     }
 } 
