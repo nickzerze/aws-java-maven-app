@@ -49,7 +49,7 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    echo 'Deploying docker image to EC2 instance...'
+                    echo 'Deploying docker image to EC2 instance....'
                     //def dockerComposeCmd = "docker compose -f docker-compose.yaml up --detach"
 
                     def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME}"
