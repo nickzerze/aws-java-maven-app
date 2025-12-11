@@ -41,7 +41,7 @@ pipeline {
                     echo 'Deploying docker image to EC2 instance...'
                     //def dockerComposeCmd = "docker compose -f docker-compose.yaml up --detach"
 
-                    def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
+                    def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME}"
 
                     sshagent(['ec2-instance-aws-java-maven-app']) {
                         sh 'docker compose -f docker-compose.yaml down'
