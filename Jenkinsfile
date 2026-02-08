@@ -54,10 +54,10 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying docker image to K8s cluster....'
-                    }
                 }
             }
-        } 
+        }
+        
 
         stage('commit version update') {
             steps {
