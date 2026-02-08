@@ -46,23 +46,14 @@ pipeline {
             }
         }
 
-        stage("deploying") {
+        stage("deploy") {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+            }
             steps {
                 script {
-                    echo 'Deploying docker image to EC2 instance....'
-                    //def dockerComposeCmd = "docker compose -f docker-compose.yaml up --detach"
-
-                    def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME}"
-
-                    sshagent(['ec2-instance-aws-java-maven-app']) {
-                        //Πρώτα κάνω copy το server-cmds.sh στο EC2 instance
-                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null server-cmds.sh ec2-user@18.185.16.224:/home/ec2-user"
-
-                        //Μετά κάνω copy το docker-compose.yaml στο EC2 instance
-                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yaml ec2-user@18.185.16.224:/home/ec2-user"
-
-                        //Με ssh τρέχω το server-cmds.sh μέσω της εντολής shellcmd που παίρνει και σαν παράμετρο το IMAGE_NAME για να περαστεί μετά στο docker-compose.yaml
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@18.185.16.224 ${shellCmd}"
+                    echo 'Deploying docker image to K8s cluster....'
                     }
                 }
             }
