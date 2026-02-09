@@ -68,7 +68,7 @@ pipeline {
             }
         }        
 
-        stage('commit version update') {
+        stage('commit version  update') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'github-groovy', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USER')]) {
