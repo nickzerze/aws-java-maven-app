@@ -65,8 +65,8 @@ pipeline {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@18.185.16.224 ${shellCmd}"
                     }
                 }
-
-        
+            }
+        }        
 
         stage('commit version update') {
             steps {
