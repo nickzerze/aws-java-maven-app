@@ -59,8 +59,9 @@ pipeline {
                     // Το envsubst το θέλω για να φορτώσουν τα variables τα οποία έχω μέσα στο deployment.yaml και service.yaml. 
                     // Θα πρέπει να εγκαταστήσω στο Jenkins το envsubst ΠΡΩΤΑ. 
                     // Το envsubst < kubernetes/deployment.yaml παράγει το αρχείο γεμισμένο με τα σωστά variables και μετά περνιέται 
-                    sh 'envsubst < kubernetes/deployment.yaml | kubectl apply -f '
-                    sh 'envsubst < kubernetes/service.yaml | kubectl apply -f '
+                    // σαν όρισμα στο τέλος την εντολής kubectl apply -f 
+                    sh 'envsubst < Kubernetes/deployment.yaml | kubectl apply -f '
+                    sh 'envsubst < Kubernetes/service.yaml | kubectl apply -f '
                 }
             }
         }
