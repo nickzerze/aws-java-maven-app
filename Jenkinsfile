@@ -56,13 +56,13 @@ pipeline {
 
                     sshagent(['ec2-instance-aws-java-maven-app']) {
                         //Πρώτα κάνω copy το server-cmds.sh στο EC2 instance
-                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null server-cmds.sh ec2-user@18.185.16.224:/home/ec2-user"
+                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null server-cmds.sh ec2-user@3.67.64.175:/home/ec2-user"
 
                         //Μετά κάνω copy το docker-compose.yaml στο EC2 instance
-                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yaml ec2-user@18.185.16.224:/home/ec2-user"
+                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yaml ec2-user@3.67.64.175:/home/ec2-user"
 
                         //Με ssh τρέχω το server-cmds.sh μέσω της εντολής shellcmd που παίρνει και σαν παράμετρο το IMAGE_NAME για να περαστεί μετά στο docker-compose.yaml
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@18.185.16.224 ${shellCmd}"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.67.64.175 ${shellCmd}"
                     }
                 }
             }
