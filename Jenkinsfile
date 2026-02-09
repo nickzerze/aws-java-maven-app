@@ -50,10 +50,17 @@ pipeline {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+                APP_NAME = 'java-maven-app'
             }
             steps {
                 script {
                     echo 'Deploying docker image to K8s cluster....'
+
+                    // Το envsubst το θέλω για να φορτώσουν τα variables τα οποία έχω μέσα στο deployment.yaml και service.yaml. 
+                    // Θα πρέπει να εγκαταστήσω στο Jenkins το envsubst ΠΡΩΤΑ. 
+                    // Το envsubst < kubernetes/deployment.yaml παράγει το αρχείο γεμισμένο με τα σωστά variables και μετά περνιέται 
+                    sh 'envsubst < kubernetes/deployment.yaml | kubectl apply -f '
+                    sh 'envsubst < kubernetes/service.yaml | kubectl apply -f '
                 }
             }
         }
