@@ -46,9 +46,14 @@ pipeline {
             }
         }
 
-        stage("deploying") {
+        stage("deploy") {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+            }
             steps {
                 script {
+<<<<<<< HEAD
                     echo 'Deploying docker image to EC2 instance....'
                     //def dockerComposeCmd = "docker compose -f docker-compose.yaml up --detach"
 
@@ -64,9 +69,13 @@ pipeline {
                         //Με ssh τρέχω το server-cmds.sh μέσω της εντολής shellcmd που παίρνει και σαν παράμετρο το IMAGE_NAME για να περαστεί μετά στο docker-compose.yaml
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@3.67.64.175 ${shellCmd}"
                     }
+=======
+                    echo 'Deploying docker image to K8s cluster....'
+>>>>>>> 4c20d5d229b6df8abf0be275f3652849cead5cc4
                 }
             }
-        } 
+        }
+        
 
         stage('commit version update') {
             steps {
