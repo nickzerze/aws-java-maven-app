@@ -57,7 +57,7 @@ pipeline {
                     echo 'Deploying docker image to K8s cluster....'
 
                     // Το envsubst το θέλω για να φορτώσουν τα variables τα οποία έχω μέσα στο deployment.yaml και service.yaml. 
-                    // Θα πρέπει να εγκαταστήσω στο Jenkins το envsubst ΠΡΩΤΑ. 
+                    // Θα πρέπει να εγκαταστήσω στο Jenkins το envsubst ΠΡΩΤΑ.  
                     // Το envsubst < kubernetes/deployment.yaml παράγει το αρχείο γεμισμένο με τα σωστά variables και μετά περνιέται 
                     // σαν όρισμα στο τέλος την εντολής kubectl apply -f -
                     sh 'envsubst < Kubernetes/deployment.yaml | kubectl apply -f -'
