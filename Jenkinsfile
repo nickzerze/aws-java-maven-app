@@ -12,6 +12,10 @@ pipeline {
     tools {
         maven 'maven-3.9'
     }
+    environment {
+        DOCKER_REPO_SERVER = '746688010937.dkr.ecr.eu-central-1.amazonaws.com'
+        DOCKER_REPO = "${DOCKER_REPO_SERVER}/java-maven-app"
+    }
     stages {
         stage("Increment Version") {
              steps {
@@ -22,7 +26,7 @@ pipeline {
                         versions:commit'
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                     def version = matcher[0][1]
-                    env.IMAGE_NAME = "malware4/java-maven-app:${version}-${BUILD_NUMBER}"
+                    env.IMAGE_NAME = "${version}-${BUILD_NUMBER}"
                 }
             }           
         }
@@ -39,9 +43,13 @@ pipeline {
             steps {
                 script {
                     echo "Building the docker image..."
-                    buildImage(env.IMAGE_NAME)
-                    dockerLogin()
-                    dockerPush(env.IMAGE_NAME)
+                    buildImage("${DOCKER_REPO}:${IMAGE_NAME}")
+                    //Επειδή στο jenkins-shared-library repo το docker login το κάνω με τα credentials του docke-hub-repo, για να μην αλλάζω όλο
+                    // το shared-library, εδώ στο deploy_on_k8s_using_ECR θα κάνω dockerLogin με withCredentials
+                    withCredentials([usernamePassword(credentialsId: 'ecr-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh "echo $PASS | docker login -u $USER --password-stdin ${DOCKER_REPO_SERVER}"
+                    }
+                    dockerPush("${DOCKER_REPO}:${IMAGE_NAME}")
                 }
             }
         }
