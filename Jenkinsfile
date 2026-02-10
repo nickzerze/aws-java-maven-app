@@ -92,7 +92,7 @@ pipeline {
 
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:deploy_on_k8s'
+                        sh 'git push origin HEAD:deploy_on_k8s_using_ECR'
                     }
                 }
             }
