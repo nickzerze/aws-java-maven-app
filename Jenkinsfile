@@ -62,7 +62,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'Deploying docker image to K8s cluster.....'
+                    echo 'Deploying docker image to K8s cluster....'
 
                     // Το envsubst το θέλω για να φορτώσουν τα variables τα οποία έχω μέσα στο deployment.yaml και service.yaml. 
                     // Θα πρέπει να εγκαταστήσω στο Jenkins το envsubst ΠΡΩΤΑ.  
