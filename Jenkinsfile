@@ -83,7 +83,7 @@ pipeline {
                     def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME} ${DOCKER_CREDS_USR} ${DOCKER_CREDS_PSW}"
                     // def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"  -> μπορώ να βάλω αυτό στις 3 εντολές μέσα στο sshagent
 
-                    sshagent(['myapp-key-pair-for-jenkins']) {
+                    sshagent(['myapp-server-ssh-key']) {
                         //Πρώτα κάνω copy το server-cmds.sh στο EC2 instance
                         sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null server-cmds.sh ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
 
