@@ -84,7 +84,7 @@ pipeline {
                     // def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"  -> μπορώ να βάλω αυτό στις 3 εντολές μέσα στο sshagent
 
                     sshagent(['myapp-server-ssh-key']) {
-                        //Πρώτα κάνω copy το server-cmds.sh στο EC2 instance
+                        //Πρώτα κάνω copy το server-cmds.sh στο EC2 instance 
                         sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null server-cmds.sh ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
 
                         //Μετά κάνω copy το docker-compose.yaml στο EC2 instance
