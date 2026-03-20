@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.1.9"
+  required_version = ">= 0.12"
   backend "s3" {
     bucket = "myapp-tf-s3-bucket-zerze"
     key    = "myapp/state.tfstate"
