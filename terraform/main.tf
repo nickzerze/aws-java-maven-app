@@ -291,8 +291,8 @@ resource "aws_instance" "myapp-server" {
   // Κάνω bind με ένα καινούργιο key-pair που έχω φτιάξει μόνος μου μέσα στο AWS και έχω αποθηκεύσει το .pem αρχείο στο μηχάνημά μου
   //key_name = "myapp-server-key-pair"
 
-  // Βάζω καρφωτά το όνομα του key-pair που φτιάξαμε manual στο AWS.
-  key_name = "myapp-server-key-pair"
+  // Βάζω καρφωτά το όνομα του key-pair που φτιάξαμε manual στο AWS συγκεκριμένα για το Jenkins
+  key_name = "myapp-key-pair-for-jenkins"
 
 
   /*
