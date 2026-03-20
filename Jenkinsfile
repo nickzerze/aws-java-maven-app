@@ -114,7 +114,7 @@ pipeline {
 
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:jenkins-jobs-with-docker_compose'
+                        sh 'git push origin HEAD:jenkins-with-terraform'
                     }
                 }
             }
