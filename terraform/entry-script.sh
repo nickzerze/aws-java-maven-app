@@ -5,4 +5,4 @@ sudo systemctl start docker
 sudo usermod -aG docker ec2-user
 
 # Install docker compose
-sudo apt-get install docker-compose-plugin
+sudo yum install docker-compose-plugin
