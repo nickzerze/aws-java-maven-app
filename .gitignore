@@ -1,2 +1,5 @@
 .idea/*
 target
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
