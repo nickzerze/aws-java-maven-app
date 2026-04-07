@@ -13,4 +13,6 @@ sudo usermod -aG docker ec2-user
 
 mkdir -p /usr/local/lib/docker/cli-plugins
 curl -SL https://github.com/docker/compose/releases/download/v5.0.1/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+# Στο curl μπορώ να μην βάλω καρφωτά το όνομα του αρχείου που θέλω να κατεβάσω αλλά να χρησιμοποιήσω το uname -s και uname -m
+# curl -SL "https://github.com/docker/compose/releases/download/v5.0.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
 chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
