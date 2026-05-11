@@ -9,6 +9,9 @@ pipeline {
             steps {
                 script {
                     sshagent(['ansible-server-key']) {
+                        // Ο ansible server είναι ec2-instance και έχω σαν default user τον ec2-user
+                        //  οπότε δεν μπορώ να κάνω copy τα αρχεία στον /root folder απ' ευθείας. 
+                        //  Για το λόγο αυτό πάω και τα κάνω μέσω tmp
                         echo "Creating temp directory on ansible server"
                         sh """
                             ssh -o StrictHostKeyChecking=no ${ANSIBLE_USER}@${ANSIBLE_SERVER} "mkdir -p /tmp/ansible"
@@ -52,8 +55,11 @@ pipeline {
                         //Για να τρέξουν τα παρακάτω πρέπει να εγαταστήσω το Plugin SSH Pipeline Steps
                         sshCommand remote: remote, command: "whoami"
                         sshCommand remote: remote, command: "sudo ls -la /root"
+                        // Κάνω το αρχείο prepare-server.sh εκτελέσιμο
                         sshCommand remote: remote, command: "sudo chmod +x /root/prepare-server.sh"
+                        // Τρέχω το script που είναι στο /root folder
                         sshCommand remote: remote, command: "sudo bash /root/prepare-server.sh"
+                        // Στην ουσία λέμε: Μπες στο /root και μετά τρέξε το command ansible-playbook docker-and-compose.yaml
                         sshCommand remote: remote, command: "sudo bash -c 'cd /root && ansible-playbook docker-and-compose.yaml'"
                     }
                 }
