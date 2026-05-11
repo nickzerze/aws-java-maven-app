@@ -52,6 +52,7 @@ pipeline {
                         //Για να τρέξουν τα παρακάτω πρέπει να εγαταστήσω το Plugin SSH Pipeline Steps
                         sshCommand remote: remote, command: "whoami"
                         sshCommand remote: remote, command: "sudo ls -la /root"
+                        sshCommand remote: remote, command: "sudo chmod +x /root/prepare-server.sh"
                         sshCommand remote: remote, command: "sudo bash /root/prepare-server.sh"
                         sshCommand remote: remote, command: "sudo bash -c 'cd /root && ansible-playbook docker-and-compose.yaml'"
                     }
