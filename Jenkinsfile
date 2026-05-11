@@ -49,9 +49,10 @@ pipeline {
                         remote.identityFile = keyfile
                         remote.user = user
 
-                        //Για να τρέξει πρέπει να εγαταστήσω το Plugin SSH Pipeline Steps
+                        //Για να τρέξουν τα παρακάτω πρέπει να εγαταστήσω το Plugin SSH Pipeline Steps
                         sshCommand remote: remote, command: "whoami"
                         sshCommand remote: remote, command: "sudo ls -la /root"
+                        sshScript remote: remote, script: "prepare-server.sh"
                         sshCommand remote: remote, command: "sudo bash -c 'cd /root && ansible-playbook docker-and-compose.yaml'"
                     }
                 }
