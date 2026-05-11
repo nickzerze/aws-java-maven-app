@@ -10,7 +10,7 @@ pipeline {
                     sshagent(['ansible-server-key']) {
                         echo "copying ansible folder to ansible server"
                         // ${ANSIBLE_SERVER}:/root without root will give jenkins@${ANSIBLE_SERVER}:/root
-                        sh "scp -o StrictHostKeyChecking=no ansible/* ec2-user@${ANSIBLE_SERVER}:/root"    
+                        sh "scp -o StrictHostKeyChecking=no ansible/* ubuntu@${ANSIBLE_SERVER}:/root"    
 
                         echo "copying ssh keys for ec2 instances"
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
