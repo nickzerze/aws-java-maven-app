@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         ANSIBLE_SERVER = "3.74.44.62"
-        ANSIBLE_USER = "ubuntu"
     }
     stages {
         stage("copy ansible folder and ec2 access key to ansible-server") {
