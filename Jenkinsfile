@@ -25,7 +25,10 @@ pipeline {
                         """
                         echo "copying ssh keys for ec2 instances"
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                            sh 'scp -o StrictHostKeyChecking=no $keyfile root@$ANSIBLE_SERVER:/root/ssh-key.pem'
+                            sh """
+                                scp -o StrictHostKeyChecking=no "$keyfile" ${ANSIBLE_USER}@${ANSIBLE_SERVER}:/tmp/ssh-key.pem
+                                ssh -o StrictHostKeyChecking=no ${ANSIBLE_USER}@${ANSIBLE_SERVER} "sudo mv /tmp/ssh-key.pem /root/ssh-key.pem && sudo chmod 400 /root/ssh-key.pem && sudo chown root:root /root/ssh-key.pem"
+                            """
                         }
                     }                               
                 }
