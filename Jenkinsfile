@@ -1,50 +1,24 @@
-#!/usr/bin.env groovy
-
-library identifier: 'jenkins-shared-library@main', retriever: modernSCM(
-    [$class: 'GitSCMSource',
-    remote: 'https://github.com/nickzerze/jenkins-shared-library.git',
-    credentialsId: 'github-credentials'
-    ]
-)
-
-pipeline {   
+pipeline {
     agent any
-    tools {
-        maven 'maven-3.9'
-    }
     environment {
-        IMAGE_NAME = 'malware4/java-maven-app:aws-1.0'
+        ANSIBLE_SERVER = "3.74.44.62"
     }
     stages {
-        stage("build app") {
+        stage("copy ansible folder and ec2 access key to ansible-server") {
             steps {
                 script {
-                    echo "Building the application jar...."
-                    buildJar()
-                }
-            }
-        }
-        stage("build image") {
-            steps {
-                script {
-                    echo "Building the docker image..."
-                    buildImage(env.IMAGE_NAME)
-                    dockerLogin()
-                    dockerPush(env.IMAGE_NAME)
-                }
-            }
-        }
+                    sshagent(['ansible-server-key']) {
+                        echo "copying ansible folder to ansible server"
+                        // ${ANSIBLE_SERVER}:/root without root will give jenkins@${ANSIBLE_SERVER}:/root
+                        sh "scp -o StrictHostKeyChecking=no ansible/* root@${ANSIBLE_SERVER}:/root"    
 
-        stage("deploy") {
-            steps {
-                script {
-                    echo 'Deploying docker image to EC2 instance...'
-                    def dockerCmd = "docker run -p 8080:8080 -d ${IMAGE_NAME}"
-                    sshagent(['ec2-instance-aws-java-maven-app']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@63.180.240.90 ${dockerCmd}"
-                    }
+                        echo "copying ssh keys for ec2 instances"
+                        withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                            sh 'scp $keyfile root@$ANSIBLE_SERVER:/root/ssh-key.pem'
+                        }
+                    }                               
                 }
             }
-        }               
-    }
-} 
+        }
+    }   
+}
