@@ -50,7 +50,7 @@ pipeline {
                         remote.user = user
 
                         sshCommand remote: remote, command: "ls -l"
-                        sshCommand remote: remote, command: "ansible-playbook docker-and-compose.yaml"
+                        //sshCommand remote: remote, command: "ansible-playbook docker-and-compose.yaml"
                     }
                 }
             }
