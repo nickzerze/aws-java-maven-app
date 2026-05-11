@@ -34,5 +34,30 @@ pipeline {
                 }
             }
         }
+
+        stage("execute ansible playbook from the ansible-server") {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+            }
+            steps {
+                script {
+                    echo "executing ansible-playbook"
+                    
+                    def remote = [:]
+                    remote.name = "ansible-server"
+                    remote.host = ANSIBLE_SERVER
+                    remote.allowAnyHosts = true
+                    
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                        remote.identityFile = keyfile
+                        remote.user = user
+
+                        sshCommand remote: remote, command: "ls -l"
+                        sshCommand remote: remote, command: "ansible-playbook docker-and-compose.yaml"
+                    }
+                }
+            }
+        }
     }   
 }
