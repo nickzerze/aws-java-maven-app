@@ -49,6 +49,7 @@ pipeline {
                         remote.identityFile = keyfile
                         remote.user = user
 
+                        //Για να τρέξει πρέπει να εγαταστήσω το Plugin SSH Pipeline Steps
                         sshCommand remote: remote, command: "ls -l"
                         //sshCommand remote: remote, command: "ansible-playbook docker-and-compose.yaml"
                     }
